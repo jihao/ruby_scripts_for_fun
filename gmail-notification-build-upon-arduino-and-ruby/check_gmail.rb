@@ -27,6 +27,7 @@ def get_latest_email_count
 	gmail = Gmail.new($username, $password)
 	latest = gmail.inbox.count(:unread)
 	gmail.logout
+	gmail.disconnect
 	return latest
 end
 
@@ -43,12 +44,16 @@ init_email_count
 # Arduino on serial port2 (COM3)   
 $sp = SerialPort.new(2, 9600)
 loop do
-	if has_new_email?
-		write_serialport 'H'
-		sleep 30
-		write_serialport 'L'
+	begin
+		if has_new_email?
+			write_serialport 'H'
+			sleep 2
+			write_serialport 'L'
+		end
+	rescue => error
+		puts error.message
 	end
-	sleep 5
+	sleep 1
 end
 
 #not closed
