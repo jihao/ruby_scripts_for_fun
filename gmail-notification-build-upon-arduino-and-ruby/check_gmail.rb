@@ -47,13 +47,13 @@ loop do
 	begin
 		if has_new_email?
 			write_serialport 'H'
-			sleep 2
+			sleep 30
 			write_serialport 'L'
 		end
 	rescue => error
 		puts error.message
 	end
-	sleep 1
+	sleep 5
 end
 
 #not closed
