@@ -1,0 +1,15 @@
+It works for checking dependencies
+
+SOG
+	ImsBWAS14
+		component.nfo
+	IMSDNS5.0
+		component.nfo
+	IMSHSS4.1
+		component.nfo
+	IMSSLF1.1
+		component.nfo
+	ImsSRD3.0
+		component.nfo
+	IMSSV4.1
+		component.nfo
