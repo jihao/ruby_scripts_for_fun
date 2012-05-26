@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+command = ARGV.shift
+FILE_NAME = 'todo.txt'
+
+case command
+    when "new"
+        new_task = ARGV.shift
+        File.open(FILE_NAME,'a') do |file|
+        	file.puts "#{new_task},#{Time.now}"
+        	puts "Task added."
+        end
+    when "list"
+      File.open(FILE_NAME,'r') do |file|
+      	counter = 1
+      	file.readlines.each do |line|
+      		name,created,completed = line.chomp.split(/,/)
+      		printf("%3d - %s\n", counter, name)
+      		printf("      Created   : %s\n", created)
+      		unless completed.nil?
+      			printf("      Completed : %s\n", completed)
+      		end
+      		counter +=1
+      	end
+      end
+      
+    when "done","delete"
+      task_number = ARGV.shift.to_i
+      
+      File.open(FILE_NAME,'r') do |file|
+      	File.open("#{FILE_NAME}.new",'w') do |new_file|
+      	  counter = 1;
+      	  file.readlines.each do |line|
+      		name,created,completed = line.chomp.split(/,/)
+      		if task_number == counter
+      		  if command == "done"
+      			  new_file.puts("#{name},#{created},#{Time.now}")
+      			end
+      			puts "Task #{counter} #{command}"
+      		else
+      			new_file.puts line
+      		end
+      		counter += 1
+      	  end
+      	end
+      end
+      `mv #{FILE_NAME}.new #{FILE_NAME}`
+end
+
+
+
+
+
+
