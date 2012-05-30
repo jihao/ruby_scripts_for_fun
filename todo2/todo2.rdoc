@@ -1,0 +1,5 @@
+= todo2
+
+Generate this with
+    todo2 rdoc
+After you have described your command line interface
