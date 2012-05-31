@@ -21,23 +21,25 @@ program_desc 'Describe your application here'
 
 version Todo2::VERSION
 
-desc 'Describe some switch here'
-switch [:s,:switch]
+desc 'Global switch for specify debug mode'
+switch [:d,:debug_switch]
 
-desc 'Describe some flag here'
-default_value 'the default'
-arg_name 'The name of the argument'
-flag [:f,:flagname]
+desc 'The name of database file'
+default_value "./todo.txt"
+arg_name 'file'
+flag [:f,:file]
 
 desc 'Describe new here'
 arg_name 'Describe arguments to new here'
 command :new do |c|
-  c.desc 'Describe a switch to new'
-  c.switch :s
+  c.desc 'create a task as first task in our task list'
+  c.switch [:f,:first]
 
-  c.desc 'Describe a flag to new'
-  c.default_value 'default'
-  c.flag :f
+  c.desc 'priority of a task (1-10)'
+  c.default_value '1'
+  c.arg_name 'priority'
+  c.flag [:p,:priority]
+  
   c.action do |global_options,options,args|
 
     # Your command logic here
@@ -50,6 +52,9 @@ end
 desc 'Describe list here'
 arg_name 'Describe arguments to list here'
 command :list do |c|
+  c.desc 'list the tasks with sort'
+  c.switch [:s,:sort]
+  
   c.action do |global_options,options,args|
   end
 end
