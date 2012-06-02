@@ -3,7 +3,7 @@
 require 'optparse'
 # http://www.ruby-doc.org/stdlib-1.9.3/libdoc/optparse/rdoc/index.html
 require 'English'
-require 'open4' # workaround for ruby 1.8 due to open3 too old
+require 'open3'
 
 options = {}
 option_parser = OptionParser.new do |opts| 
@@ -62,15 +62,9 @@ output_file = "#{database_name}.sql"
 
 command = "mysqldump #{auth}#{database_name} >#{output_file}"
 puts "Running '#{command}'"
-pid, stdin, stdout ,stderr = Open4.popen4(command) #capture3 if ruby1.9
-_, status = Process::waitpid2(pid) 
-#system(command)
-#unless $CHILD_STATUS.exitstatus == 0  # $? is not a good variale name
-#  puts "There was a problem running '#{command}'"
-#  exit 1
-#end
-unless status.exitstatus == 0
-  puts "There was a problem running '#{command}'"
-   
-  exit -1
+stdout_str ,stderr_str, status = Open3.capture3(command)
+unless status.success?
+  STDERR.puts "There was a problem running '#{command}'"
+  STDERR.puts stderr_str.gsub(/^mysqldump: /,'')
+  exit 1
 end
