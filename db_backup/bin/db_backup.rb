@@ -3,6 +3,7 @@
 require 'optparse'
 # http://www.ruby-doc.org/stdlib-1.9.3/libdoc/optparse/rdoc/index.html
 require 'English'
+require 'open4' # workaround for ruby 1.8 due to open3 too old
 
 options = {}
 option_parser = OptionParser.new do |opts| 
@@ -34,15 +35,23 @@ option_parser = OptionParser.new do |opts|
   end
 end
 
-option_parser.parse!
-if ARGV.empty?
-  puts "error: you must supply a database_name"
-  puts
+exit_status = 0
+begin
+  option_parser.parse!
+  if ARGV.empty?
+   puts "error: you must supply a database_name"
+   puts
+   puts option_parser.help
+   exit_status |= 0b0010
+  else
+   database_name = ARGV[0]
+  end
+rescue OptionParser::InvalidArgument,OptionParser::InvalidOption => ex
+  puts ex.message
   puts option_parser.help
-  exit 2
-else
-  database_name = ARGV[0]
+  exit_status |= 0b0001
 end
+exit exit_status unless exit_status == 0
 
 puts options.inspect
 
@@ -53,8 +62,15 @@ output_file = "#{database_name}.sql"
 
 command = "mysqldump #{auth}#{database_name} >#{output_file}"
 puts "Running '#{command}'"
-system(command)
-unless $CHILD_STATUS.exitstatus == 0  # $? is not a good variale name
+pid, stdin, stdout ,stderr = Open4.popen4(command) #capture3 if ruby1.9
+_, status = Process::waitpid2(pid) 
+#system(command)
+#unless $CHILD_STATUS.exitstatus == 0  # $? is not a good variale name
+#  puts "There was a problem running '#{command}'"
+#  exit 1
+#end
+unless status.exitstatus == 0
   puts "There was a problem running '#{command}'"
-  exit 1
+   
+  exit -1
 end
