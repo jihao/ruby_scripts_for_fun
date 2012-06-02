@@ -1,0 +1,10 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "DB_BACKUP" "1" "June 2012" "" ""
+.
+.SH "NAME"
+\fBdb_backup\fR
+.
+.P
+db_backup\.rb(1) \-\- backup one or more MySQL databases===========================================================##SYNOPSIS\fBdb_backup\.rb\fR \fIdatabase_name\fR\fBdb_backup\.rb\fR \fB\-u username\fR \fB\-p password\fR \fIdatabase_name\fR\fBdb_backup\.rb\fR \fB\-i\fR|\fB\-\-iteration\fR \fIdatabase_name\fR##DESCRIPTION\fBdb_backup\.rb\fR is a simple command\-line tool for backing up a MySQL database\. It does so safely and quietly, using a sensible name for the backup files, so it\'s perfect for use with cron as a daily backup\.By default, \fBdb_backup\.rb\fR makes a daily backup and names the resulting backup file with the date\. \fBdb_backup\.rb\fR also understands our development process, so if you specify the \fB\-\-iteration\fR flag, the backup will be named differently than for a daily backup\. This will allow you to easily keep one backup per iteration, easily identifying it, and differentiate it from daily backups\.By default, \fBdb_backup\.rb\fR will use your database credentials in \fB~/\.my\.cnf\fR, however, you can override either the username or password (or both) via the \fB\-u\fR and \fB\-p\fR flags, respectively\.Finally, \fBdb_backup\.rb\fR will add a sanity check on your username, to make sure it fits with our corporate standard format of \fBfirst\.last\fR\.##FILES\fB~/\.my\.cnf\fR is used for authentication if \fB\-u\fR or \fB\-p\fR is omitted\.##OPTIONS * \fB\-i\fR, \fB\-\-iteration\fR: Indicate that this backup is an "end of iteration" backup\. * \fB\-u USER\fR: Database username, in first\.last format \fB~/my\.cnf\fR is not correct * \fB\-p PASSWORD\fR: Database password##EXAMPLESBackup the database "big_client" $ db_backup\.rb big_clientBackup the database "small_client", for which different credentials are required: $ db_backup\.rb \-u dave \-p d4v3 small_clientMake an iteration backup of the "big_client" database: $ db_backup\.rb \-i big_client

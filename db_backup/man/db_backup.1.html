@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' value='text/html;charset=utf8'>
+  <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
+  <title>db_backup(1)</title>
+  <style type='text/css' media='all'>
+  /* style: man */
+  body#manpage {margin:0}
+  .mp {max-width:100ex;padding:0 9ex 1ex 4ex}
+  .mp p,.mp pre,.mp ul,.mp ol,.mp dl {margin:0 0 20px 0}
+  .mp h2 {margin:10px 0 0 0}
+  .mp > p,.mp > pre,.mp > ul,.mp > ol,.mp > dl {margin-left:8ex}
+  .mp h3 {margin:0 0 0 4ex}
+  .mp dt {margin:0;clear:left}
+  .mp dt.flush {float:left;width:8ex}
+  .mp dd {margin:0 0 0 9ex}
+  .mp h1,.mp h2,.mp h3,.mp h4 {clear:left}
+  .mp pre {margin-bottom:20px}
+  .mp pre+h2,.mp pre+h3 {margin-top:22px}
+  .mp h2+pre,.mp h3+pre {margin-top:5px}
+  .mp img {display:block;margin:auto}
+  .mp h1.man-title {display:none}
+  .mp,.mp code,.mp pre,.mp tt,.mp kbd,.mp samp,.mp h3,.mp h4 {font-family:monospace;font-size:14px;line-height:1.42857142857143}
+  .mp h2 {font-size:16px;line-height:1.25}
+  .mp h1 {font-size:20px;line-height:2}
+  .mp {text-align:justify;background:#fff}
+  .mp,.mp code,.mp pre,.mp pre code,.mp tt,.mp kbd,.mp samp {color:#131211}
+  .mp h1,.mp h2,.mp h3,.mp h4 {color:#030201}
+  .mp u {text-decoration:underline}
+  .mp code,.mp strong,.mp b {font-weight:bold;color:#131211}
+  .mp em,.mp var {font-style:italic;color:#232221;text-decoration:none}
+  .mp a,.mp a:link,.mp a:hover,.mp a code,.mp a pre,.mp a tt,.mp a kbd,.mp a samp {color:#0000ff}
+  .mp b.man-ref {font-weight:normal;color:#434241}
+  .mp pre {padding:0 4ex}
+  .mp pre code {font-weight:normal;color:#434241}
+  .mp h2+pre,h3+pre {padding-left:0}
+  ol.man-decor,ol.man-decor li {margin:3px 0 10px 0;padding:0;float:left;width:33%;list-style-type:none;text-transform:uppercase;color:#999;letter-spacing:1px}
+  ol.man-decor {width:100%}
+  ol.man-decor li.tl {text-align:left}
+  ol.man-decor li.tc {text-align:center;letter-spacing:4px}
+  ol.man-decor li.tr {text-align:right;float:right}
+  </style>
+</head>
+<!--
+  The following styles are deprecated and will be removed at some point:
+  div#man, div#man ol.man, div#man ol.head, div#man ol.man.
+
+  The .man-page, .man-decor, .man-head, .man-foot, .man-title, and
+  .man-navigation should be used instead.
+-->
+<body id='manpage'>
+  <div class='mp' id='man'>
+
+  <div class='man-navigation' style='display:none'>
+    <a href="#NAME">NAME</a>
+  </div>
+
+  <ol class='man-decor man-head man head'>
+    <li class='tl'>db_backup(1)</li>
+    <li class='tc'></li>
+    <li class='tr'>db_backup(1)</li>
+  </ol>
+
+  <h2 id="NAME">NAME</h2>
+<p class="man-name">
+  <code>db_backup</code>
+</p>
+<p><span class="man-ref">db_backup.rb<span class="s">(1)</span></span> -- backup one or more MySQL databases===========================================================##SYNOPSIS<code>db_backup.rb</code> <var>database_name</var><code>db_backup.rb</code> <code>-u username</code> <code>-p password</code> <var>database_name</var><code>db_backup.rb</code> <code>-i</code>|<code>--iteration</code> <var>database_name</var>##DESCRIPTION<strong>db_backup.rb</strong> is a simple command-line tool for backing up a MySQL database.  It does so safely and quietly, using a sensible name for the backup files, so it's perfect for use with cron as a daily backup.By default, <code>db_backup.rb</code> makes a daily backup and names the resulting backup file with the date.  <code>db_backup.rb</code> also understands our development process, so if you specify the <code>--iteration</code> flag, the backup will be named differently than for a daily backup.  This will allow you to easily keep one backup per iteration, easily identifying it, and differentiate it from daily backups.By default, <code>db_backup.rb</code> will use your database credentials in <code>~/.my.cnf</code>, however, you can override either the username or password (or both) via the <code>-u</code> and <code>-p</code> flags, respectively.Finally, <code>db_backup.rb</code> will add a sanity check on your username, to make sure it fits with our corporate standard format of <code>first.last</code>.##FILES<code>~/.my.cnf</code> is used for authentication if <code>-u</code> or <code>-p</code> is omitted.##OPTIONS  * <code>-i</code>, <code>--iteration</code>:    Indicate that this backup is an "end of iteration" backup.  * <code>-u USER</code>:    Database username, in first.last format    <code>~/my.cnf</code> is not correct  * <code>-p PASSWORD</code>:    Database password##EXAMPLESBackup the database "big_client"    $ db_backup.rb big_clientBackup the database "small_client", for which different credentials are required:    $ db_backup.rb -u dave -p d4v3 small_clientMake an iteration backup of the "big_client" database:    $ db_backup.rb -i big_client</p>
+
+
+  <ol class='man-decor man-foot man foot'>
+    <li class='tl'></li>
+    <li class='tc'>June 2012</li>
+    <li class='tr'>db_backup(1)</li>
+  </ol>
+
+  </div>
+</body>
+</html>
