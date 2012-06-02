@@ -2,6 +2,7 @@
 
 require 'optparse'
 # http://www.ruby-doc.org/stdlib-1.9.3/libdoc/optparse/rdoc/index.html
+require 'English'
 
 options = {}
 option_parser = OptionParser.new do |opts| 
@@ -38,9 +39,22 @@ if ARGV.empty?
   puts "error: you must supply a database_name"
   puts
   puts option_parser.help
-  exit 1
+  exit 2
 else
   database_name = ARGV[0]
 end
 
 puts options.inspect
+
+auth = ""
+auth += "-u#{options[:user]} " if options[:user]
+auth += "-p#{options[:password]} " if options[:password]
+output_file = "#{database_name}.sql"
+
+command = "mysqldump #{auth}#{database_name} >#{output_file}"
+puts "Running '#{command}'"
+system(command)
+unless $CHILD_STATUS.exitstatus == 0  # $? is not a good variale name
+  puts "There was a problem running '#{command}'"
+  exit 1
+end
