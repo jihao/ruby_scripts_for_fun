@@ -28,7 +28,44 @@ desc 'The name of database file'
 default_value "./todo.txt"
 arg_name 'file'
 flag [:f,:file]
+class Todo
+     def initialize(priority,name,created,completed)     
+          @name = name
+          @priority = priority
+          @created = created
+          @completed = completed
+     end
+     def to_s
+       "#{@priority},#{@name},#{@created}".concat(@completed.nil? ? "" : ",#{@completed}")
+     end
+end
 
+def append_task_to_file(filename, priority, new_task)
+  File.open(filename,'a') do |file|
+	  file.puts "#{priority},#{new_task},#{Time.now}"
+	  puts "Task added."
+  end
+end
+def read_todos(filename)
+   todos = []
+   File.open(filename,'r') do |file|
+     counter = 1
+     
+     file.readlines.each do |line|
+       priority,name,created,completed = line.chomp.split(/,/)
+       todo = Todo.new(priority,name,created,completed)
+       todos.push(todo)
+   		 printf("%3d - %s\n", counter, name)
+   		 printf("      priority  : %s\n", priority)
+   		 printf("      Created   : %s\n", created)
+   		 unless completed.nil?
+   			 printf("      Completed : %s\n", completed)
+   		 end
+   		 counter +=1
+     end
+   end
+   return todos
+end
 desc 'Describe new here'
 arg_name 'Describe arguments to new here'
 command :new do |c|
@@ -41,7 +78,9 @@ command :new do |c|
   c.flag [:p,:priority]
   
   c.action do |global_options,options,args|
-
+    args.each do |task|
+      append_task_to_file(global_options[:f],options[:p],task)
+    end
     # Your command logic here
      
     # If you have any errors, just raise them
@@ -56,6 +95,10 @@ command :list do |c|
   c.switch [:s,:sort]
   
   c.action do |global_options,options,args|
+    todos = read_todos(global_options[:f])
+    todos.each do |todo|
+      puts todo
+    end
   end
 end
 
