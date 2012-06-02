@@ -5,7 +5,7 @@ require 'optparse'
 require 'English'
 require 'open3'
 
-options = {}
+options = {:gzip => true}
 option_parser = OptionParser.new do |opts| 
   executable_name = File.basename $PROGRAM_NAME
   opts.banner = "  Backup one or more MySQL databases
@@ -24,6 +24,9 @@ option_parser = OptionParser.new do |opts|
   end
   opts.on("-t","--[no-]test") do |val|
     options[:test] = val
+  end
+  opts.on("--no-gzip","Do not compress the backup file") do |val|
+    options[:gzip] = false
   end
   
   servers = {:dev => '127.0.0.1',

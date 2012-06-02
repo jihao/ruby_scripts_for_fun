@@ -103,7 +103,7 @@ command :new do |c|
 end
 
 desc 'List tasks'
-command :list do |c|
+command [:list,:ls] do |c|
   c.desc 'List the tasks with sort'
   c.switch [:s,:sort]
   
