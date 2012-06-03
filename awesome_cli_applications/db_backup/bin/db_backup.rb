@@ -4,8 +4,21 @@ require 'optparse'
 # http://www.ruby-doc.org/stdlib-1.9.3/libdoc/optparse/rdoc/index.html
 require 'English'
 require 'open3'
+require 'yaml'
 
-options = {:gzip => true}
+options = {:gzip => true,:force=>false,:user=>"hao"}
+#CONFIG_FILE = File.join(ENV['HOME'],'.db_backup.rc.yaml')
+CONFIG_FILE = File.join(File.dirname($PROGRAM_NAME),'.db_backup.rc.yaml')
+if File.exists? CONFIG_FILE
+  config_options = YAML.load_file(CONFIG_FILE)
+  options.merge!(config_options)
+else
+  File.open(CONFIG_FILE,'w') { |file|
+    YAML::dump(options,file)
+  }
+  STDOUT.puts "Initialized configuration file in #{CONFIG_FILE}"
+end
+
 option_parser = OptionParser.new do |opts| 
   executable_name = File.basename $PROGRAM_NAME
   opts.banner = "  Backup one or more MySQL databases
