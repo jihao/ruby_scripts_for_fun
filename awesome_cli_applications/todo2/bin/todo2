@@ -95,8 +95,15 @@ command :new do |c|
   c.arg_name 'priority'
   c.flag [:p,:priority]
   
-  c.action do |global_options,options,args|
-    args.each do |task|
+  c.action do |global_options,options,task_names|
+    if task_names.empty?
+      puts "Reading new tasks from stdin..."
+      task_names = STDIN.readlines.map {|a| a.chomp }
+    end
+    if task_names.size == 0
+      raise "You must provide tasks on the command-line or standard input"
+    end
+    task_names.each do |task|
       append_task_to_file(global_options[:f],options[:p],task)
     end
   end
