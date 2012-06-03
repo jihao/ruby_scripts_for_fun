@@ -14,6 +14,7 @@ $: << File.expand_path(File.dirname(File.realpath(__FILE__)) + '/../lib')
 require 'rubygems'
 require 'gli'
 require 'todo2_version'
+require 'yaml'
 
 include GLI
 
@@ -24,10 +25,25 @@ version Todo2::VERSION
 desc 'Global switch for specify debug mode'
 switch [:d,:debug]
 
-desc 'The name of database file'
-default_value "./todo.txt"
-arg_name 'file'
+defaults = YAML.load_file(File.join(File.dirname(File.realpath(__FILE__)),'.todo2.rc.yaml'))
+
+
+desc 'Path to the todo file'
+default_value defaults[:filename] || "./todo.txt"
+arg_name 'todo_file'
 flag [:f,:file]
+
+desc "URL to JIRA"
+arg_name 'url'
+flag [:url]
+desc "Username to JIRA"
+arg_name 'username'
+flag [:username]
+desc "Password to JIRA"
+arg_name 'password'
+flag [:password]
+
+
 class Todo
      attr :name,:priority,:created,:completed
      def initialize(priority,name,created,completed)     
@@ -91,9 +107,14 @@ command :new do |c|
   c.switch [:f,:first]
 
   c.desc 'set the priority of the new task, 1 being the highest'
-  c.default_value '10'
+  c.default_value defaults[:p] || '10'
   c.arg_name 'priority'
   c.flag [:p,:priority]
+  
+  c.desc 'group for JIRA'
+  c.arg_name 'group_name'
+  c.default_value defaults[:group]
+  c.flag [:group]
   
   c.action do |global_options,options,task_names|
     if task_names.empty?

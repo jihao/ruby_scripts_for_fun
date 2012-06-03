@@ -1,0 +1,13 @@
+---
+:filename: ./todo.txt
+:url: http://jira.example.com
+:username: davec
+:password: S3cr3tp@ss
+commands:
+  :new:
+     :f: true
+     :group: Analysics Database
+  :list:
+     :format: pretty
+  :done: {}
+
