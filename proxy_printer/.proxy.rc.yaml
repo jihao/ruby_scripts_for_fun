@@ -1,0 +1,5 @@
+---
+bj: 'http://iproxy-bj.cn.ao.ericsson.se:8080'
+sh: 'http://iproxy-sh.cn.ao.ericsson.se:8080'
+www: 'http://www-proxy.ericsson.se:8080'
+fast: 'http://www-proxy.lmera.ericsson.se:80'
