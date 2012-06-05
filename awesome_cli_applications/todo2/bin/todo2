@@ -10,7 +10,7 @@ unless File.respond_to? :realpath
     end
   end
 end
-$: << File.expand_path(File.dirname(File.realpath(__FILE__)) + '/../lib')
+$: << File.expand_path(File.dirname(File.realpath(__FILE__)) + '../lib')
 require 'rubygems'
 require 'gli'
 require 'todo2_version'
