@@ -21,6 +21,7 @@ spec = Gem::Specification.new do |s|
   s.executables << 'todo'
   s.add_dependency('gli')
   s.add_dependency('rainbow')
+  s.add_dependency('terminal-table')
   s.add_development_dependency('rake')
   s.add_development_dependency('rdoc')
   s.add_development_dependency('aruba', '~> 0.4.6')
