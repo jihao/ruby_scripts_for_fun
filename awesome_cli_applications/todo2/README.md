@@ -3,19 +3,19 @@
 ``` bash
 function get_todo_commands(){
   if [ -z $2 ] ; then
-		COMPREPLY=(`todo2 help -c`)
+		COMPREPLY=(`todo help -c`)
 	else
-		COMPREPLY=(`todo2 help -c $2`)
+		COMPREPLY=(`todo help -c $2`)
 	fi
 }
-complete -F get_todo_commands todo2
+complete -F get_todo_commands todo
 ```
 		
 * PATH=./bin:$PATH
 
 * source ~/.bash
 
-* todo2 &lt;TAB&gt; 
+* todo &lt;TAB&gt; 
 ```
   done  help  list  new 
 ```

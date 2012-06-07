@@ -10,23 +10,17 @@ unless File.respond_to? :realpath
     end
   end
 end
-$: << File.expand_path(File.dirname(File.realpath(__FILE__)) + '../lib')
-require 'rubygems'
-require 'gli'
-require 'todo2_version'
-require 'yaml'
-
-include GLI
+#$: << File.expand_path(File.dirname(File.realpath(__FILE__)) + '../lib')
+$: << File.expand_path(File.join(File.dirname(File.realpath(__FILE__)) , '../lib'))
+require 'todo'
 
 program_desc 'Describe your application here'
-
-version Todo2::VERSION
+version Todo::VERSION
 
 desc 'Global switch for specify debug mode'
 switch [:d,:debug]
 
-defaults = YAML.load_file(File.join(File.dirname(File.realpath(__FILE__)),'.todo2.rc.yaml'))
-
+defaults = YAML.load_file(File.join(File.dirname(File.realpath(__FILE__)),'.todo.rc.yaml'))
 
 desc 'Path to the todo file'
 default_value defaults[:filename] || "./todo.txt"
@@ -44,57 +38,6 @@ arg_name 'password'
 flag [:password]
 
 
-class Todo
-     attr :name,:priority,:created,:completed
-     def initialize(priority,name,created,completed)     
-          @name = name
-          @priority = priority
-          @created = DateTime.parse(created)
-          @completed =  (completed ? DateTime.parse(completed) : nil)
-     end
-     def to_s
-       "#{@priority},#{@name},#{@created.strftime('%Y-%m-%d %H:%M:%S')}".concat(@completed.nil? ? "" : ",#{@completed.strftime('%Y-%m-%d %H:%M:%S')}")
-     end
-end
-
-def append_task_to_file(filename, priority, new_task)
-  File.open(filename,'a') do |file|
-	  file.puts "#{priority},#{new_task},#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}"
-	  puts "Task added."
-  end
-end
-def complete_task(filename, task_number)
-  File.open(filename,'r') do |file|
-      counter = 1
-      File.open(filename+".tmp","w") do |tmp_file|  
-        file.readlines.each do |line|
-          if (counter==task_number)
-            tmp_file.puts("#{line.chomp},#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}")
-          else
-            tmp_file.puts("#{line.chomp}")
-          end
-          counter += 1;
-        end
-      end
-  end
-  `mv #{filename}.tmp #{filename}`
-  puts "Task #{task_number} completed."
-end
-
-def read_todos(filename)
-   todos = []
-   File.open(filename,'r') do |file|
-     counter = 1
-     
-     file.readlines.each do |line|
-       priority,name,created,completed = line.chomp.split(/,/)
-       todo = Todo.new(priority,name,created,completed)
-       todos.push(todo)
-   		 counter +=1
-     end
-   end
-   return todos
-end
 desc 'Create a new task in task list'
 long_desc """
 A task has a name and a priority. By default, new
@@ -125,7 +68,7 @@ command :new do |c|
       raise "You must provide tasks on the command-line or standard input"
     end
     task_names.each do |task|
-      append_task_to_file(global_options[:f],options[:p],task)
+      Todo::Todo.append_task_to_file(global_options[:f],options[:p],task)
     end
   end
 end
@@ -141,7 +84,7 @@ command [:list,:ls] do |c|
   c.flag [:format]
   
   c.action do |global_options,options,args|
-    todos = read_todos(global_options[:f])
+    todos = Todo::Todo.read_todos(global_options[:f])
     if options[:format].nil?
       if STDOUT.tty?
         options[:format] = 'pretty'
@@ -174,7 +117,7 @@ arg_name 'task_number'
 command :done do |c|
   c.action do |global_options,options,args|
     args.each do |task_number|
-      complete_task(global_options[:f],task_number.to_i)
+      Todo::Todo.complete_task(global_options[:f],task_number.to_i)
     end
   end
 end
