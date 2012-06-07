@@ -2,7 +2,8 @@ require 'rainbow'
 module Todo
 	module Format
 		class Pretty
-			
+			def before; end
+			def after; end
 			def format(index,todo)
 				color = :default
 				if todo.completed?

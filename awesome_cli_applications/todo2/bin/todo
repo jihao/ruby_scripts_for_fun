@@ -84,7 +84,7 @@ command [:list,:ls] do |c|
   output_formats = {
 		'csv' => Todo::Format::CSV.new,
 		'pretty' => Todo::Format::Pretty.new,
-		#'json' => Todo::Format::JSON.new,
+		'table' => Todo::Format::Table.new,
   }
   c.desc 'Format of the output'
   #c.arg_name 'csv|pretty'
@@ -106,9 +106,11 @@ command [:list,:ls] do |c|
 	
     todos = Todo::Todo.read_todos(global_options[:f])
 	formatter = output_formats[options[:format]]
+	formatter.before
 	todos.each_with_index do |todo,index|
 		formatter.format(index,todo)
 	end
+	formatter.after
 	
 
 #    if options[:format] == 'pretty'
