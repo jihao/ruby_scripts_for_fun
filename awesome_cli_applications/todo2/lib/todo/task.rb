@@ -14,6 +14,10 @@ module Todo
 		   "#{@priority},#{@name},#{@created.strftime('%Y-%m-%d %H:%M:%S')}".concat(@completed.nil? ? "" : ",#{@completed.strftime('%Y-%m-%d %H:%M:%S')}")
 		 end
 		 
+		 def completed?
+			!@completed.nil?
+		 end
+		 
 		 def self.append_task_to_file(filename, priority, new_task)
 		  File.open(filename,'a') do |file|
 			  file.puts "#{priority},#{new_task},#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}"

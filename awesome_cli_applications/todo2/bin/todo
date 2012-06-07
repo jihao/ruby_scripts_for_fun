@@ -78,13 +78,24 @@ command [:list,:ls] do |c|
   c.desc 'List the tasks with sort'
   c.switch [:s,:sort]
   
+  c.desc "Don't use color"
+  c.switch [:'no-color']
+  
+  output_formats = {
+		'csv' => Todo::Format::CSV.new,
+		'pretty' => Todo::Format::Pretty.new,
+		#'json' => Todo::Format::JSON.new,
+  }
   c.desc 'Format of the output'
-  c.arg_name 'csv|pretty'
+  #c.arg_name 'csv|pretty'
+  c.arg_name output_formats.keys.join('|')
   # explicit default removed
   c.flag [:format]
   
   c.action do |global_options,options,args|
-    todos = Todo::Todo.read_todos(global_options[:f])
+    if options[:'no-color']
+		Sickill::Rainbow.enabled = false
+	end
     if options[:format].nil?
       if STDOUT.tty?
         options[:format] = 'pretty'
@@ -92,22 +103,29 @@ command [:list,:ls] do |c|
         options[:format] == 'csv'
       end
     end
-    
-    if options[:format] == 'pretty'
-      # Use the pretty-print format
-      puts "------------------------------------------------"
-      todos.each_with_index do |todo,index|
-        complete_flag = todo.completed ? "DONE" : "INCOMPLETE"
-        printf("%3d,%3s,%s,%s,%s\n",index+1, todo.priority, todo.name, complete_flag, todo.created.strftime('%Y-%m-%d %H:%M:%S'))
-      end
-      puts "------------------------------------------------"
-    elsif options[:format] == 'csv'
-      # Use the machine-readable CSV format
-      todos.each_with_index do |todo,index|
-        complete_flag = todo.completed ? "DONE" : "INCOMPLETE"
-        printf("%d,%s,%s,%s,%s\n",index+1, todo.priority, todo.name, complete_flag, todo.created.strftime('%Y-%m-%d %H:%M:%S'))
-      end
-    end  
+	
+    todos = Todo::Todo.read_todos(global_options[:f])
+	formatter = output_formats[options[:format]]
+	todos.each_with_index do |todo,index|
+		formatter.format(index,todo)
+	end
+	
+
+#    if options[:format] == 'pretty'
+#      # Use the pretty-print format
+#      puts "------------------------------------------------"
+#      todos.each_with_index do |todo,index|
+#        complete_flag = todo.completed ? "DONE" : "INCOMPLETE"
+#        printf("%3d,%3s,%s,%s,%s\n",index+1, todo.priority, todo.name, complete_flag, todo.created.strftime('%Y-%m-%d %H:%M:%S'))
+#      end
+#      puts "------------------------------------------------"
+#    elsif options[:format] == 'csv'
+#      # Use the machine-readable CSV format
+#      todos.each_with_index do |todo,index|
+#        complete_flag = todo.completed ? "DONE" : "INCOMPLETE"
+#        printf("%d,%s,%s,%s,%s\n",index+1, todo.priority, todo.name, complete_flag, todo.created.strftime('%Y-%m-%d %H:%M:%S'))
+#      end
+#    end  
   end
   
 end
