@@ -7,9 +7,9 @@ require "todo_version"
 spec = Gem::Specification.new do |s| 
   s.name = 'todo'
   s.version = Todo::VERSION
-  s.author = 'Your Name Here'
-  s.email = 'your@email.address.com'
-  s.homepage = 'http://your.website.com'
+  s.author = ''
+  s.email = ''
+  s.homepage = 'http://github.com/jihao'
   s.platform = Gem::Platform::RUBY
   s.summary = 'A description of your project'
 # Add your other files here if you make them
@@ -19,6 +19,8 @@ spec = Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   
   s.executables << 'todo'
+  s.add_dependency('gli')
+  s.add_dependency('rainbow')
   s.add_development_dependency('rake')
   s.add_development_dependency('rdoc')
   s.add_development_dependency('aruba', '~> 0.4.6')

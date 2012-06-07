@@ -2,6 +2,8 @@ PATH
   remote: .
   specs:
     todo (0.0.1)
+      gli
+      rainbow
 
 GEM
   remote: http://ruby.taobao.org/
@@ -23,7 +25,9 @@ GEM
     ffi (1.0.11)
     gherkin (2.10.0-x86-mingw32)
       json (>= 1.4.6)
+    gli (1.6.0)
     json (1.6.3)
+    rainbow (1.1.4)
     rake (0.9.2.2)
     rdoc (3.12)
       json (~> 1.4)
