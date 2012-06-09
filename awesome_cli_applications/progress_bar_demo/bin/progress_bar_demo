@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+$: << File.expand_path(File.join(File.dirname(__FILE__) , '../lib'))
+#puts File.expand_path(File.join(File.dirname(__FILE__) , '../lib'))
+
+require "progress_bar_demo"
+require "progress_bar"
+require 'optparse'
+require 'net/http'
+
+options={}
+
+option_parser = OptionParser.new do |opts| 
+  executable_name = File.basename $PROGRAM_NAME
+  opts.banner = "  Download via http with progress information
+  Usgae: #{executable_name} [options] url local_file_name
+  "
+end
+
+if ARGV.empty?
+  puts option_parser.help
+  exit
+end
+
+url = ARGV.shift
+save_as_file_name = ARGV.shift
+option_parser.parse!
+
+uri = URI("#{url.strip}")
+
+bar_size = 100
+Net::HTTP.start(uri.host, uri.port) do |http|
+  request = Net::HTTP::Get.new uri.request_uri
+
+  http.request request do |response|
+    #p response['content-type']
+    #p response.methods
+    bar_size = response.content_length
+    bar = ProgressBar.new bar_size
+    
+    open "#{save_as_file_name}", 'w' do |io|
+      response.read_body do |chunk|
+        #puts chunk.inspect
+        bar.increment! chunk.length
+        #sleep 0.1
+        io.write chunk
+      end
+    end
+  end
+end
+
