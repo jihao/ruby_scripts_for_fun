@@ -42,6 +42,10 @@ module JsonBrowser
 		end
 	end
 	
+	def completions(input)
+	    self.to_s.split(/\s+/).grep(/^#{input}/)
+  end
+	
 	private
 	def item_at(path)
 		if path=='..'

@@ -47,6 +47,10 @@ def main(json_file)
 	
 	current_context = JsonBrowser::Context.new(root,nil)
 	
+	Readline.completion_proc = proc { |input|
+	  current_context.completions(input)
+	}
+	
 	while command != 'exit'
 		command = Readline.readline("> ",true)
 		break if command.nil?
