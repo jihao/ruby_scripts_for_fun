@@ -16,9 +16,7 @@ class Class
 end
 
 class Person 
-  attr_checked :age do |v| 
-    v > 19 
-  end
+  attr_checked(:age) { |v| v > 19 }
 end
 
 class TestAddCheckedAttributes < Test::Unit::TestCase
