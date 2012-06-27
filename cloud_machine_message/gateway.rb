@@ -3,7 +3,7 @@ require "net/ssh/gateway"
 
 msg = "welcome ^_^"
 
-gateway = Net::SSH::Gateway.new('150.236.223.68','ema',{:password=>'ema00000'})
+gateway = Net::SSH::Gateway.new('150.236.223.68','test',{:password=>'test'})
 
 gateway.ssh("10.170.67.84", "root", {:password=>"root000"}) do |ssh|
     puts ssh.exec!("hostname")
