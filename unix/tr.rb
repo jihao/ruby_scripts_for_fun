@@ -10,17 +10,14 @@ options = {}
 
 option_parser = OptionParser.new do |opts| 
   executable_name = File.basename $PROGRAM_NAME
-  opts.banner = "  #{executable_name} - translate or delete characters
+  #opts.summary_indent = "\n  "
+  opts.banner = "  #{executable_name} - Translate, squeeze, and/or delete characters from standard input, writing to standard output.
 
   Usage: #{executable_name} [OPTION]... SET1 [SET2]
   "
   
   opts.on("-c","-C","--complement",'use the complement of SET1') do
     options[:complement] = true
-  end
-  #使用正则表达式校验参数
-  opts.on("-u USER", "--user USER",/^(.+)\.(.+)$/,'Database username in first.last format') do |user|
-    options[:user] = user
   end
   opts.on("-d","--delete",'delete characters in SET1, do not translate') do
     options[:delete] = true
@@ -33,56 +30,84 @@ option_parser = OptionParser.new do |opts|
   end
   # No argument, shows at tail.  This will print an options summary.
       # Try it and see!
-      opts.on_tail("-h", "--help", "Show this message") do
-        puts opts
-        exit
-      end
-
-      # Another typical switch to print the version.
-      opts.on_tail("--version", "Show version") do
-        puts OptionParser::Version.join('.')
-        exit
-      end
-      
-  servers = {:dev => '127.0.0.1',
-             :qa => 'qa007.example.com',
-             :prod => 'www.example.com'}
-  opts.on("-s SERVER", "--server SERVER", servers) do |address|
-    # 仅支持上面的三个key,并用value作为address的值
-    options[:server] = address
+  opts.on("-h", "--help", "Show this message") do
+    puts opts
+    exit
   end
+
+  # Another typical switch to print the version.
+  opts.on("--version", "Show version") do
+    puts OptionParser::Version.join('.')
+    exit
+  end
+
+ 
+  opts.separator "
+SETs are specified as strings of characters. Most represent themselves.
+Interpreted sequences are:
+
+  \\NNN character with octal value NNN (1 to 3 octal digits)
+  \\\ backslash
+  \\a audible BEL
+  \\b backspace
+  \\f form feed
+  \\n new line
+  \\r return
+  \\t horizontal tab
+  \\v vertical tab
+  CHAR1-CHAR2 all characters from CHAR1 to CHAR2 in ascending order
+#  [CHAR*] in SET2, copies of CHAR until length of SET1
+#  [CHAR*REPEAT] REPEAT copies of CHAR, REPEAT octal if starting with 0
+  [:alnum:] all letters and digits
+  [:alpha:] all letters
+  [:blank:] all horizontal whitespace
+  [:cntrl:] all control characters
+  [:digit:] all digits
+  [:graph:] all printable characters, not including space
+  [:lower:] all lower case letters
+  [:print:] all printable characters, including space
+  [:punct:] all punctuation characters
+  [:space:] all horizontal or vertical whitespace
+  [:upper:] all upper case letters
+  [:xdigit:] all hexadecimal digits
+  [=CHAR=] all characters which are equivalent to CHAR
+
+Translation occurs if -d is not given and both SET1 and SET2 appear.
+-t may be used only when translating.  SET2 is extended to length of
+SET1 by repeating its last character as necessary.  Excess characters
+of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to
+expand in ascending order; used in SET2 while translating, they may
+only be used in pairs to specify case conversion.  -s uses SET1 if not
+translating nor deleting; else squeezing uses SET2 and occurs after
+translation or deletion.
+
+"
+  
 end
 
 exit_status = 0
 begin
   option_parser.parse!
   if ARGV.empty?
-   puts "error: you must supply a database_name"
-   puts
-   puts option_parser.help
+   puts "error: #{File.basename $PROGRAM_NAME}: missing operand"
+   puts "Try `tr --help` for more information"
+   #puts option_parser.help
    exit_status |= 0b0010
   else
-   database_name = ARGV[0]
+   SET1 = ARGV[0]
+   SET2 = ARGV[1]
   end
 rescue OptionParser::InvalidArgument,OptionParser::InvalidOption => ex
   puts ex.message
-  puts option_parser.help
+  puts "Try `tr --help` for more information"
   exit_status |= 0b0001
 end
 exit exit_status unless exit_status == 0
 
 puts options.inspect
+puts SET1
+puts SET2
 
-auth = ""
-auth += "-u#{options[:user]} " if options[:user]
-auth += "-p#{options[:password]} " if options[:password]
-output_file = "#{database_name}.sql"
-
-command = "mysqldump #{auth}#{database_name} >#{output_file}"
-puts "Running '#{command}'"
-stdout_str ,stderr_str, status = Open3.capture3(command)
-unless status.success?
-  STDERR.puts "There was a problem running '#{command}'"
-  STDERR.puts stderr_str.gsub(/^mysqldump: /,'')
-  exit 1
+while(str=STDIN.gets)
+	puts str
 end
