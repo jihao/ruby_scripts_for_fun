@@ -108,6 +108,24 @@ puts options.inspect
 puts SET1
 puts SET2
 
+
+hash_match = {
+  "[:alnum:]" => /[a-z][A-Z][0-9]/, #all letters and digits
+  "[:alpha:]" => /[a-z][A-Z]/, #all letters
+  "[:blank:]" => / /, #all horizontal whitespace
+  "[:cntrl:]" => //, #all control characters
+  "[:digit:]" => /[0-9]/, #all digits
+  "[:graph:]" => //, #all printable characters, not including space
+  "[:lower:]" => /[a-z]/, #all lower case letters
+  "[:print:]" => //, #all printable characters, including space
+  "[:punct:]" => //, #all punctuation characters
+  "[:space:]" => /[ \s]/, #all horizontal or vertical whitespace
+  "[:upper:]" => /[A-Z]/, #all upper case letters
+  "[:xdigit:]" => //, all hexadecimal digits
+  "[=CHAR=]" => // all characters which are equivalent to CHAR
+}
+
+
 while(str=STDIN.gets)
 	puts str
 end
