@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"> 
+<title>External template</title>
+</head>
+<body>
+<h1>Worked! <%= @name %></h1>
+<ul>
+	<% @users.each do |user| %>
+	<li><%= user %></li>
+	<% end %>
+</ul>
+</body>
+</html>
